@@ -1,0 +1,14 @@
+CREATE TABLE Payment (
+  paymentID INT AUTO_INCREMENT PRIMARY KEY,
+  campaignID varchar(255) NOT NULL, 
+  userID INT unsigned NOT NULL,  
+  amount DECIMAL(10, 2) NOT NULL CHECK (amount > 0), 
+  paymentDate DATETIME NOT NULL,  
+  paymentMethod VARCHAR(50) NOT NULL,  
+  paymentStatus ENUM('Success', 'Failed') NOT NULL,  
+
+   FOREIGN KEY (campaignID) REFERENCES Campaign(CampaignID) ON DELETE CASCADE ON UPDATE CASCADE,
+   FOREIGN KEY (userID) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+
+  INDEX idx_campaign_user (campaignID, userID)
+);

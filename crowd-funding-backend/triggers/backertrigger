@@ -1,0 +1,24 @@
+DELIMITER $$
+
+CREATE TRIGGER ValidateAndLogDonation
+BEFORE INSERT ON Backercampaign
+FOR EACH ROW
+BEGIN
+    -- Validate that the donation does not exceed the remaining amount
+    DECLARE remainingAmount DECIMAL(10, 2);
+
+    SELECT (GoalAmount - CurrentAmount) INTO remainingAmount
+    FROM Campaign
+    WHERE CampaignID = NEW.campaignID;
+
+    IF NEW.amountDonated > remainingAmount THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Donation exceeds the remaining goal amount for the campaign';
+    END IF;
+
+    -- Log the donation into the DonationLogs table
+    INSERT INTO DonationLogs (backerCampaignID, campaignID, logTime)
+    VALUES (NEW.backerCampaignID, NEW.campaignID, NOW());
+END$$
+
+ DELIMITER;

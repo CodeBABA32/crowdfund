@@ -1,0 +1,17 @@
+{
+  "name": "crowd-funding",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm start --prefix ./crowd-funding-frontend\" \"npm start --prefix ./crowd-funding-backend\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mysql2": "^3.11.5",
+    "readme": "^0.7.0"
+  }
+}

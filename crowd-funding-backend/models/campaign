@@ -1,0 +1,26 @@
+CREATE TABLE Campaign (
+    CampaignID VARCHAR(255) PRIMARY KEY,
+    userID INT REFERENCES users(userID),
+    Title VARCHAR(100) NOT NULL,
+    Description TEXT NOT NULL,
+    GoalAmount DECIMAL(10, 2) NOT NULL CHECK (GoalAmount > 0),
+    CurrentAmount DECIMAL(10, 2) DEFAULT 0 CHECK (CurrentAmount >= 0),
+    Category VARCHAR(50) NOT NULL,
+    Status ENUM('Active', 'Inactive', 'Completed') DEFAULT 'Active',
+    StartDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    EndDate TIMESTAMP NOT NULL
+
+);
+
+DELIMITER $$
+CREATE TRIGGER ValidateEndDate
+BEFORE INSERT ON Campaign
+FOR EACH ROW
+BEGIN
+    IF NEW.EndDate <= NEW.StartDate THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'EndDate must be after StartDate';
+    END IF;
+END$$
+DELIMITER ;
+
